@@ -1,0 +1,20 @@
+diff --git a/src/wl/sys/wl_cfg80211_hybrid.c b/src/wl/sys/wl_cfg80211_hybrid.c
+index bc9d9d5..39e55b9 100644
+--- a/src/wl/sys/wl_cfg80211_hybrid.c
++++ b/src/wl/sys/wl_cfg80211_hybrid.c
+@@ -2010,9 +2010,15 @@ static s32 wl_inform_single_bss(struct wl_cfg80211_priv *wl, struct wl_bss_info
+ 
+ 	notify_ie = (u8 *)bi + le16_to_cpu(bi->ie_offset);
+ 	notify_ielen = le32_to_cpu(bi->ie_length);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 18, 0)
+ 	cbss = cfg80211_inform_bss(wiphy, channel, (const u8 *)(bi->BSSID.octet),
+ 		0, beacon_proberesp->capab_info, beacon_proberesp->beacon_int,
+ 		(const u8 *)notify_ie, notify_ielen, signal, GFP_KERNEL);
++#else
++	cbss = cfg80211_inform_bss(wiphy, channel, CFG80211_BSS_FTYPE_UNKNOWN, (const u8 *)(bi->BSSID.octet),
++		0, beacon_proberesp->capab_info, beacon_proberesp->beacon_int,
++		(const u8 *)notify_ie, notify_ielen, signal, GFP_KERNEL);
++#endif
+ 
+ 	if (unlikely(!cbss))
+ 		return -ENOMEM;
