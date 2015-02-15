@@ -1,0 +1,28 @@
+diff --git a/src/wl/sys/wl_cfg80211_hybrid.c b/src/wl/sys/wl_cfg80211_hybrid.c
+index d14637e..a434b9a 100644
+--- a/src/wl/sys/wl_cfg80211_hybrid.c
++++ b/src/wl/sys/wl_cfg80211_hybrid.c
+@@ -1452,7 +1452,11 @@ wl_cfg80211_get_station(struct wiphy *wiphy, struct net_device *dev,
+ 		WL_DBG(("Could not get rate (%d)\n", err));
+ 	} else {
+ 		rate = dtoh32(rate);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 20, 0)
+ 		sinfo->filled |= STATION_INFO_TX_BITRATE;
++#else
++		sinfo->filled |= BIT(NL80211_STA_INFO_TX_PACKETS);
++#endif
+ 		sinfo->txrate.legacy = rate * 5;
+ 		WL_DBG(("Rate %d Mbps\n", (rate / 2)));
+ 	}
+@@ -1465,7 +1469,11 @@ wl_cfg80211_get_station(struct wiphy *wiphy, struct net_device *dev,
+ 			return err;
+ 		}
+ 		rssi = dtoh32(scb_val.val);
++#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 20, 0)
+ 		sinfo->filled |= STATION_INFO_SIGNAL;
++#else
++		sinfo->filled |= BIT(NL80211_STA_INFO_SIGNAL);
++#endif
+ 		sinfo->signal = rssi;
+ 		WL_DBG(("RSSI %d dBm\n", rssi));
+ 	}
