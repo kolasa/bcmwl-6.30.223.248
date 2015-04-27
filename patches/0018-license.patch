@@ -1,0 +1,13 @@
+diff --git a/src/wl/sys/wl_linux.c b/src/wl/sys/wl_linux.c
+index 6e1d429..0cc1e65 100644
+--- a/src/wl/sys/wl_linux.c
++++ b/src2/wl/sys/wl_linux.c
+@@ -160,7 +160,7 @@ static int wl_set_radio_block(void *data, bool blocked);
+ static void wl_report_radio_state(wl_info_t *wl);
+ #endif
+ 
+-MODULE_LICENSE("MIXED/Proprietary");
++MODULE_LICENSE("GPL\0MIXED/Proprietary");
+ 
+ static struct pci_device_id wl_id_table[] =
+ {
